@@ -209,7 +209,7 @@ if st.button("🚀 Jalankan Analisis"):
 st.markdown(
     f"""
     <div class="footer">
-        Built with ❤️ by 
+        by 
         <a href="https://github.com/Naufallm" target="_blank" style="color: #238636; text-decoration: none; font-weight: bold;">Naufallm</a> & 
         <a href="https://github.com/syahrialfaturr" target="_blank" style="color: #238636; text-decoration: none; font-weight: bold;">syahrialfaturr</a> 
         | © 2024 IDX AI Research Engine
