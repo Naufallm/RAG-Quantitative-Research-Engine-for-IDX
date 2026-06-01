@@ -8,3 +8,5 @@ sentence-transformers
 pypdf
 protobuf==4.25.3
 pysqlite3-binary
+torch
+torchvision
