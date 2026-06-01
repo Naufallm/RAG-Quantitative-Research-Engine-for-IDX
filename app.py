@@ -141,9 +141,6 @@ with st.sidebar:
     st.info("Sistem akan menganalisis dokumen berdasarkan database yang tersimpan di GitHub.")
     
     st.divider()
-    # Tombol Deploy (Link Button)
-    st.link_button("🚀 Deploy to Cloud", "https://share.streamlit.io/", use_container_width=True)
-    st.caption("Klik untuk menghosting aplikasi ini secara publik.")
 
 # ======================
 # MAIN INTERFACE (CHAT STYLE)
