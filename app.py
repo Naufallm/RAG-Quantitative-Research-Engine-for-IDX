@@ -16,72 +16,76 @@ from langchain_core.runnables import RunnablePassthrough
 # ======================
 st.set_page_config(
     page_title="IDX AI Research Engine",
-    page_icon="🤖",
+    page_icon="📈",
     layout="wide"
 )
 
 # ======================
-# MODERN STYLE (CHAT AI LOOK)
+# THEME-AWARE MODERN STYLE
 # ======================
 st.markdown("""
 <style>
-    /* Mengatur tema dasar agar konsisten di Dark Mode */
-    .stApp {
-        background-color: #0E1117;
-        color: #E0E0E0;
-    }
-    
-    /* Sidebar Styling */
-    [data-testid="stSidebar"] {
-        background-color: #161B22;
-        border-right: 1px solid #30363D;
-    }
-
-    /* Kotak Hasil Analisis gaya Chat Assistant */
+    /* Menggunakan variabel sistem Streamlit agar adaptif terhadap Light/Dark Mode */
     .result-box {
-        background-color: #161B22;
-        color: #E0E0E0;
+        background-color: var(--secondary-background-color);
+        color: var(--text-color);
         padding: 25px;
-        border-radius: 15px;
-        border: 1px solid #30363D;
-        line-height: 1.6;
-        margin-top: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        border-radius: 12px;
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        line-height: 1.7;
+        margin-top: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        font-size: 1.05rem;
     }
 
-    /* Tombol Jalankan Analisis */
+    /* Tombol Jalankan Analisis - Modern Green */
     .stButton > button {
         width: 100%;
         background-color: #238636;
         color: white;
-        border-radius: 8px;
+        border-radius: 10px;
         border: none;
-        padding: 10px;
-        font-weight: bold;
-        transition: 0.3s;
+        padding: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
+    
     .stButton > button:hover {
         background-color: #2ea043;
-        border: none;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
-    /* Header Styling */
-    h1 {
-        font-weight: 800;
-        letter-spacing: -1px;
+    /* Mempercantik sidebar */
+    [data-testid="stSidebar"] {
+        border-right: 1px solid rgba(128, 128, 128, 0.1);
+    }
+
+    /* Styling link di footer sidebar */
+    .partner-link {
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: 500;
+        opacity: 0.8;
+    }
+    .partner-link:hover {
+        opacity: 1;
+        color: #238636;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ======================
-# LOAD VECTOR DATABASE & GROQ
+# LOAD MODELS
 # ======================
 @st.cache_resource
 def init_models():
     embedding_model = HuggingFaceEmbeddings(
         model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     )
-    db_path = "chroma_db_idx"
+    # Gunakan path relatif yang aman untuk Streamlit Cloud
+    db_path = "chroma_db_idx" if os.path.exists("chroma_db_idx") else "RAG-Quantitative-Research-Engine-for-IDX/chroma_db_idx"
+    
     vector_db = Chroma(
         persist_directory=db_path,
         embedding_function=embedding_model,
@@ -100,7 +104,7 @@ vector_db, llm = init_models()
 # ======================
 template = """
 Anda adalah Senior Financial Analyst Profesional. 
-Jawablah pertanyaan berdasarkan konteks laporan keuangan yang diberikan.
+Jawablah pertanyaan berdasarkan konteks laporan keuangan yang diberikan secara mendalam dan akurat.
 
 KONTEKS:
 {context}
@@ -113,14 +117,11 @@ JAWABAN:
 prompt = ChatPromptTemplate.from_template(template)
 
 def run_idx_research(ticker, query):
-    # Retrieval
     results = vector_db.similarity_search(query, k=4, filter={"ticker": ticker})
     if not results:
         return None, None
         
     context_text = "\n\n".join([f"Sumber: {d.metadata['source']}\n{d.page_content}" for d in results])
-    
-    # Chain
     chain = ({"context": RunnablePassthrough(), "question": RunnablePassthrough()} | prompt | llm | StrOutputParser())
     response = chain.invoke({"context": context_text, "question": query})
     
@@ -128,42 +129,49 @@ def run_idx_research(ticker, query):
     return response, sources
 
 # ======================
-# SIDEBAR (SETTINGS & DEPLOY)
+# SIDEBAR (SETTINGS & CREDITS)
 # ======================
 with st.sidebar:
     st.title("🤖 IDX AI Engine")
-    st.caption("v1.2 - Advanced RAG System")
+    st.caption("Advanced RAG Finance Assistant")
     st.divider()
     
-    # Input Ticker di Sidebar agar main area bersih
-    ticker = st.text_input("📍 Masukkan Ticker Emiten", value="RISE").upper()
+    ticker = st.text_input("📍 Ticker Emiten", value="RISE", placeholder="Contoh: BBCA").upper()
+    st.caption("Analisis berbasis dataset laporan keuangan 50 emiten IDX.")
     
-    st.info("Sistem akan menganalisis dokumen berdasarkan database yang tersimpan di GitHub.")
+    st.divider()
+    
+    # BAGIAN CREDIT PARTNER
+    st.markdown("### 👥 Collaborators")
+    # Link Github Naufallm
+    st.markdown(f'🔗 <a href="https://github.com/Naufallm" class="partner-link">Naufallm</a>', unsafe_allow_html=True)
+    # Link Github Syahrialfaturr
+    st.markdown(f'🔗 <a href="https://github.com/syahrialfaturr" class="partner-link">syahrialfaturr</a>', unsafe_allow_html=True)
+    
+    st.divider()
+    st.link_button("🚀 Deploy to Cloud", "https://share.streamlit.io/", use_container_width=True)
 
 # ======================
-# MAIN INTERFACE (CHAT STYLE)
+# MAIN INTERFACE
 # ======================
 st.title("📈 Financial Research Assistant")
-st.markdown("Tanyakan apa saja mengenai laporan keuangan emiten yang terdaftar.")
+st.markdown("Mesin riset kuantitatif cerdas untuk ekstraksi data laporan keuangan IDX.")
 
-# Area Input pertanyaan di bawah judul
-query = st.text_area("💬 Apa yang ingin Anda ketahui?", placeholder="Contoh: Berapa laba bersih dan total aset perusahaan?", height=100)
+query = st.text_area("💬 Apa yang ingin Anda ketahui?", placeholder="Contoh: Berapa total laba bersih dan aset lancar perusahaan?", height=120)
 
 if st.button("Jalankan Analisis"):
     if ticker and query:
-        with st.spinner("Sedang menganalisis laporan keuangan..."):
+        with st.spinner(f"Sedang menganalisis data {ticker}..."):
             ans, docs = run_idx_research(ticker, query)
             
             if not ans:
-                st.warning(f"⚠️ Data untuk ticker {ticker} tidak ditemukan.")
+                st.warning(f"⚠️ Data untuk ticker {ticker} tidak ditemukan di database.")
             else:
-                st.subheader("📊 Hasil Analisis")
-                # Tampilan Box hasil gaya AI Assistant
+                st.subheader(f"📊 Hasil Analisis: {ticker}")
                 st.markdown(f'<div class="result-box">{ans}</div>', unsafe_allow_html=True)
                 
-                # Menampilkan sumber dengan Expander agar lebih clean
-                with st.expander("📄 Lihat Referensi Dokumen Asli"):
+                with st.expander("📄 Lihat Sumber Referensi"):
                     for d in docs:
-                        st.write(f"- {d}")
+                        st.write(f"• {d}")
     else:
-        st.error("Harap isi Ticker dan Pertanyaan.")
+        st.error("Silakan isi Ticker dan Pertanyaan terlebih dahulu.")
