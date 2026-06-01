@@ -147,9 +147,6 @@ with st.sidebar:
     st.markdown(f'🔗 <a href="https://github.com/Naufallm" class="partner-link">Naufallm</a>', unsafe_allow_html=True)
     # Link Github Syahrialfaturr
     st.markdown(f'🔗 <a href="https://github.com/syahrialfaturr" class="partner-link">syahrialfaturr</a>', unsafe_allow_html=True)
-    
-    st.divider()
-    st.link_button("🚀 Deploy to Cloud", "https://share.streamlit.io/", use_container_width=True)
 
 # ======================
 # MAIN INTERFACE
