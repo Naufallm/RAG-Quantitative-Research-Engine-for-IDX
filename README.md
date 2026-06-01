@@ -1,48 +1,72 @@
-# RAG Quantitative Research Engine for IDX
+# Dokumentasi Proyek: RAG Quantitative Research Engine for IDX
 
-Project ini bertujuan untuk membangun mesin riset kuantitatif berbasis **Retrieval-Augmented Generation (RAG)** yang dikhususkan untuk menganalisis laporan keuangan emiten di Bursa Efek Indonesia (IDX). Sistem ini dirancang untuk mengatasi hambatan ekstraksi manual data finansial yang memakan waktu dan rentan bias.
+## 1. Deskripsi Proyek
+Proyek ini bertujuan untuk membangun sistem asisten riset kuantitatif berbasis kecerdasan buatan yang mengimplementasikan metode **Retrieval-Augmented Generation (RAG)**. Sistem dirancang khusus untuk memproses, mengekstraksi, dan menganalisis data dari laporan keuangan emiten yang terdaftar di Bursa Efek Indonesia (IDX). Fokus utama proyek adalah efisiensi ekstraksi data finansial yang sebelumnya dilakukan secara manual dan rentan terhadap bias informasi.
 
-## Progres Pengembangan
+## 2. Fitur Sistem
+Sistem ini menyediakan kapabilitas analisis mendalam dengan fitur-fitur sebagai berikut:
+* **Analisis Data Terstruktur**: Mengekstraksi angka-angka dari tabel neraca, laba rugi, dan arus kas.
+* **Filter Metadata Eksklusif**: Memastikan pencarian informasi hanya dilakukan pada dokumen emiten yang dipilih (Ticker-based filtering).
+* **Mitigasi Halusinasi**: AI diinstruksikan untuk menolak memberikan jawaban apabila data pendukung tidak ditemukan dalam dokumen asli.
+* **Atribusi Sumber**: Menyediakan referensi file PDF asli untuk setiap jawaban guna kebutuhan audit dan verifikasi data.
+* **Antarmuka Responsif**: Menyediakan dashboard interaktif dengan rekomendasi pertanyaan analisis fundamental.
 
-### 1. Inisialisasi Project & Akuisisi Data
-Pada tahap awal, fokus utama adalah membangun fondasi pengembangan dan pengumpulan dataset mentah:
-*   **Lingkungan Pengembangan:** Menyiapkan repository GitHub untuk kontrol versi dan **Google Colab** sebagai platform komputasi berbasis cloud menggunakan Python.
-*   **Pengumpulan Dataset:** Kami telah mengumpulkan **50 dokumen Laporan Keuangan (Financial Statements)** secara manual dari sumber resmi [Bursa Efek Indonesia (IDX)](https://www.idx.co.id/id/perusahaan-tercatat/laporan-keuangan-dan-tahunan).
-*   **Penyimpanan Data:** Seluruh dokumen PDF disimpan dalam folder terstruktur `dataset_idx` dengan standar penamaan file yang konsisten untuk memudahkan identitas emiten (Ticker).
+## 3. Spesifikasi Teknis
+Berikut adalah ringkasan teknologi yang digunakan dalam pengembangan sistem:
 
-### 2. Pipeline Ekstraksi & Preprocessing Data
-Langkah kedua adalah mengubah dokumen PDF yang tidak terstruktur menjadi potongan informasi yang siap diproses oleh Kecerdasan Buatan (AI):
-*   **Pemindaian PDF Otomatis:** Membangun sistem pembaca PDF menggunakan library `pypdf` untuk mengekstraksi teks mentah dari seluruh halaman dokumen laporan keuangan.
-*   **Automated Metadata Tagging:** Mengembangkan logika pemrograman untuk mengidentifikasi kode saham (Ticker) dari setiap file secara otomatis, memastikan data tidak tertukar antar perusahaan.
-*   **Strategi Hierarchical Chunking:** Menggunakan `RecursiveCharacterTextSplitter` dari framework **LangChain**. Laporan keuangan dipecah menjadi **9.744 potongan teks (chunks)** berukuran 1000 karakter dengan *overlap* 200 karakter. Hal ini bertujuan agar konteks angka-angka finansial tetap terjaga dan akurat.
-*   **Audit Kualitas:** Melakukan verifikasi akhir untuk memastikan data hasil ekstraksi bersih dan memiliki struktur yang tepat sebelum masuk ke tahap penyimpanan vektor.
+| Komponen | Teknologi | Deskripsi |
+| :--- | :--- | :--- |
+| **Language Model** | Llama-3.3-70b-versatile | Model bahasa melalui Groq Cloud LPU untuk inferensi cepat. |
+| **Vector Database** | ChromaDB | Penyimpanan vektor permanen dengan metrik Cosine Similarity. |
+| **Embedding Model** | Multilingual-MiniLM-L12-v2 | Model pendukung bahasa Indonesia dan Inggris. |
+| **Framework** | LangChain | Integrasi alur kerja RAG dan manajemen prompt. |
+| **User Interface** | Streamlit | Framework aplikasi web untuk interaksi pengguna. |
+| **PDF Engine** | PyPDF | Library ekstraksi teks dari dokumen PDF tidak terstruktur. |
 
-## Status Dataset Saat Ini
-| Indikator | Jumlah |
-|---|---|
-| Total Dokumen PDF | 50 File |
-| Total Emiten Unik | Teridentifikasi via Metadata |
-| Total Potongan Teks (Chunks) | 9.744 Chunks |
+## 4. Alur Pengembangan Proyek
+Proyek ini diselesaikan melalui empat tahapan utama yang terstruktur sebagai berikut:
 
-## Tech Stack
-*   **Bahasa Pemrograman:** Python
-*   **Framework AI:** LangChain
-*   **PDF Processing:** PyPDF
-*   **Data Management:** Pandas
-*   **Version Control:** GitHub
+### Tahap 1: Inisialisasi & Akuisisi Data
+* Penyiapan repositori GitHub dan lingkungan pengembangan berbasis cloud.
+* Pengumpulan 50 laporan keuangan resmi (Financial Statements) dari website Bursa Efek Indonesia.
+* Standardisasi penamaan file untuk memudahkan ekstraksi metadata.
+
+### Tahap 2: Preprocessing & Ekstraksi Teks
+* Implementasi PDF parsing untuk mengubah data tidak terstruktur menjadi format teks mentah.
+* Proses **Hierarchical Chunking** menggunakan *Recursive Character Text Splitter*.
+* Hasil akhir tahap ini adalah 9.744 potongan teks (chunks) dengan ukuran 1.000 karakter per bagian.
+
+### Tahap 3: Indeksasi Vektor (Embedding)
+* Transformasi data teks menjadi representasi vektor numerik.
+* Konfigurasi database vektor secara permanen (Persistent Storage).
+* Implementasi sistem *score thresholding* untuk membedakan tingkat relevansi dokumen.
+
+### Tahap 4: Integrasi LLM & Deployment
+* Penghubungan database ke model Llama-3.3 melalui Groq API.
+* Penerapan *Prompt Engineering* untuk menetapkan persona AI sebagai Senior Financial Analyst.
+* Deployment aplikasi web secara publik melalui Streamlit Cloud.
+
+## 5. Panduan Penggunaan Sistem
+
+Untuk menggunakan aplikasi **IDX AI Research Engine**, pengguna dapat mengikuti langkah-langkah berikut:
+
+1. **Akses Aplikasi**: Buka tautan resmi di [https://idx-ai.streamlit.app/](https://idx-ai.streamlit.app/).
+2. **Pilih Emiten**: Pada panel sidebar di sebelah kiri, pilih Kode Saham (Ticker) yang ingin dianalisis (misalnya: RISE, BBCA, atau IBFN).
+3. **Pilih/Input Pertanyaan**:
+   * Pengguna dapat mengklik tombol rekomendasi pertanyaan yang tersedia (Laba Bersih, Total Aset, Liabilitas, dll).
+   * Pengguna dapat mengetik pertanyaan bebas pada kolom teks yang disediakan.
+4. **Proses Analisis**: Klik tombol **Jalankan Analisis** dan tunggu sistem melakukan pencarian data.
+5. **Verifikasi**: Tinjau jawaban yang diberikan oleh AI dan periksa bagian **Lihat Sumber Referensi** untuk melihat dokumen asli yang digunakan sebagai rujukan.
+
+## 6. Anggota Tim Pengembang
+
+Proyek ini dikembangkan melalui kolaborasi dua anggota tim dengan peran sebagai berikut:
+
+| Nama Pengembang | Peran Utama | Link Profil |
+| :--- | :--- | :--- |
+| **Naufallm** | Backend Architect, RAG Pipeline & Deployment | [GitHub Naufallm](https://github.com/Naufallm) |
+| **Syahrialfaturr** | UI/UX Designer, Frontend Developer & QA | [GitHub Syahrialfaturr](https://github.com/syahrialfaturr) |
 
 ---
 
-### Cara Menjalankan Pipeline
-1. Clone repository ini:
-   ```bash
-   git clone https://github.com/Naufallm/RAG-Quantitative-Research-Engine-for-IDX.git
-   ```
-2. Instal library yang diperlukan:
-   ```bash
-   pip install langchain pypdf langchain-text-splitters
-   ```
-3. Buka notebook di Google Colab dan jalankan setiap section untuk memproses file di folder `dataset_idx`.
-
----
-*Note: Dokumentasi ini akan terus diperbarui seiring dengan perkembangan integrasi model LLM dan Vector Database.*
+**Catatan Akhir**: Seluruh data yang digunakan dalam sistem ini bersumber dari laporan keuangan publik yang diterbitkan oleh perusahaan tercatat di Bursa Efek Indonesia. Penggunaan sistem ini ditujukan untuk tujuan edukasi dan riset kuantitatif.
