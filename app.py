@@ -212,7 +212,6 @@ st.markdown(
         by 
         <a href="https://github.com/Naufallm" target="_blank" style="color: #238636; text-decoration: none; font-weight: bold;">Naufallm</a> & 
         <a href="https://github.com/syahrialfaturr" target="_blank" style="color: #238636; text-decoration: none; font-weight: bold;">syahrialfaturr</a> 
-        | © 2026 IDX AI Research Engine
     </div>
     """,
     unsafe_allow_html=True
