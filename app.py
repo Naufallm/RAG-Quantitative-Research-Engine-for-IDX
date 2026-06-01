@@ -139,8 +139,6 @@ with st.sidebar:
     ticker = st.text_input("📍 Masukkan Ticker Emiten", value="RISE").upper()
     
     st.info("Sistem akan menganalisis dokumen berdasarkan database yang tersimpan di GitHub.")
-    
-    st.divider()
 
 # ======================
 # MAIN INTERFACE (CHAT STYLE)
