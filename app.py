@@ -81,7 +81,7 @@ def init_models():
     embedding_model = HuggingFaceEmbeddings(
         model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     )
-    db_path = "RAG-Quantitative-Research-Engine-for-IDX/chroma_db_idx"
+    db_path = "chroma_db_idx"
     vector_db = Chroma(
         persist_directory=db_path,
         embedding_function=embedding_model,
