@@ -98,7 +98,7 @@ def init_models():
     except:
         tickers = ["RISE", "BBCA", "IBFN"]
 
-    os.environ["GROQ_API_KEY"] = "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"
+    os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
     llm = ChatGroq(model_name="llama-3.3-70b-versatile", temperature=0)
     
     return vector_db, llm, tickers
