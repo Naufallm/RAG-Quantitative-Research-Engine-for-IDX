@@ -1,4 +1,4 @@
-name: Keep Streamlit Awake v2
+name: Keep Streamlit Awake
 
 on:
   schedule:
@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Ping Streamlit
-        run: |
-          curl -I https://idx-ai.streamlit.app/
+      - name: Show Time
+        run: date
+
+      - name: Ping Streamlit App
+        run: curl -I https://idx-ai.streamlit.app/
