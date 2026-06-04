@@ -13,5 +13,6 @@ jobs:
       - name: Show Time
         run: date
 
-      - name: Ping Streamlit App
-        run: curl -I https://idx-ai.streamlit.app/
+      - name: Ping Streamlit
+        run: |
+          curl -I https://idx-ai.streamlit.app/
