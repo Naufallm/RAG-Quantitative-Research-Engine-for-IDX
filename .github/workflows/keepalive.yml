@@ -1,4 +1,4 @@
-name: Keep Streamlit Awake
+name: Keep Streamlit Awake v2
 
 on:
   schedule:
