@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Ping Streamlit App
+      - name: Ping Streamlit
         run: |
-          curl -I https://idx-ai.streamlit.app
+          curl -I https://idx-ai.streamlit.app/
